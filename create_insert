@@ -1,0 +1,50 @@
+-- 创建表
+use zybiro;
+create table zybiro.skim
+(userid int, 
+itemid int, 
+time varchar(20));
+
+create table zybiro.sbuy
+(userid int, 
+itemid int, 
+time varchar(20));
+
+-- 插入数据
+insert into table zybiro.skim values (001, 342, '2015-05-08');
+insert into table zybiro.skim values (002, 382, '2015-05-09');
+insert into table zybiro.skim values (003, 458, '2015-05-09');
+insert into table zybiro.skim values (004, 468, '2015-05-09');
+
+insert into table zybiro.sbuy values (001, 342, '2015-05-07');
+insert into table zybiro.sbuy values (002, 382, '2015-05-08');
+insert into table zybiro.sbuy values (003, 458, '2015-05-09');
+insert into table zybiro.sbuy values (005, 325, '2015-05-09');
+
+-- 查询数据
+select * 
+from zybiro.skim;
+
+select * 
+from zybiro.sbuy;
+
+-- IN子查询的实现方法
+SELECT skim.userid
+        ,skim.itemid
+        ,skim.time
+FROM zybiro.skim
+LEFT JOIN zybiro.sbuy 
+             ON skim.userid = sbuy.userid AND skim.itemid = sbuy.itemid
+WHERE sbuy.userid IS NOT NULL;
+
+-- NOT IN子查询的实现方法
+SELECT skim.userid
+        ,skim.itemid
+        ,skim.time
+FROM zybiro.skim
+LEFT JOIN zybiro.sbuy 
+             ON skim.userid = sbuy.userid AND skim.itemid = sbuy.itemid
+WHERE sbuy.userid IS NULL;
+
+
+

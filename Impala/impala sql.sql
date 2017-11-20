@@ -1,3 +1,9 @@
+/*
+作者：Neo Wang 王政鸣
+更新时间：2017-7-5
+脚本类型：Impala
+内容：Impala SQL
+ */
 
 -- 教程
 -- HTTPS://MY.OSCHINA.NET/WEIQINGBIN/BLOG/189413
@@ -5,6 +11,7 @@
 -- HTTP://IMPALA.APACHE.ORG/DOCS/BUILD/IMPALA.PDF
 
 --DATA TYPE
+/*
 BIGINT
 BOOLEAN
 CHAR (CDH 5.2 OR HIGHER ONLY)
@@ -18,6 +25,7 @@ STRING
 TIMESTAMP
 TINYINT
 VARCHAR (CDH 5.2 OR HIGHER ONLY)
+*/
 
 
 -- COMPUTE STATS 语句
@@ -114,7 +122,7 @@ SELECT UNIX_TIMESTAMP();
 -- UNIX_TIMESTAMP() 把时间转换为时间戳
 -- 不传入参数，当前时间的时间戳
 SELECT UNIX_TIMESTAMP();
--- 传入一个参数，按照yyyy-MM-dd HH:MM:SS格式传入，注意大小写
+-- 传入一个参数，按照yyyy-MM-dd hh:mm:ss格式传入，注意大小写
 SELECT UNIX_TIMESTAMP('2017-06-08 00:00:00');
 -- 设置传入的日期格式为****-**-**，月必须为大写，年和日必须为小写
 SELECT UNIX_TIMESTAMP('20170608', 'yyyyMMdd');
@@ -124,7 +132,12 @@ SELECT UNIX_TIMESTAMP('20170608', 'yyyyMMdd');
 SELECT FROM_UNIXTIME(UNIX_TIMESTAMP());
 -- 传入时间戳同时设置转换后的格式
 SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM-dd') AS TODAY;
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyyMMdd') AS TODAY;
 SELECT FROM_UNIXTIME(UNIX_TIMESTAMP('2017-06-08 00:00:00'), 'yyyyMMdd') AS TEST_DATE;
+-- 传入时间戳，同时设置截取范围
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyyMM') AS THIS_MONTH;  -- 月
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy-MM') AS THIS_MONTH;  -- 月
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(), 'yyyy') AS THIS_MONTH;  -- 年
 
 -- 把时间字符串转换成时间戳
 SELECT CAST('1999-01-01' AS TIMESTAMP);
@@ -213,8 +226,6 @@ SELECT NOW() - INTERVAL 1 HOURS;
 SELECT DATEDIFF('2017-06-10', '2017-09-15');
 SELECT DATEDIFF('2017-09-15', '2017-06-10');
 
-
-
 -- TRUNC
 -- 对日期做舍，语法类似ROUND，支持舍入到年、季度、月、周、日、小时、分钟等精度
 -- TRUNC(TIMESTAMP, STRING UNIT)
@@ -243,6 +254,31 @@ SELECT TRUNC(NOW(), 'MI');
 -- HH, HH24: HOUR.
 -- MI: MINUTE.
 
+SELECT TRUNC(sysdate, 'year') 本年的第一天,
+       TRUNC(sysdate, 'q') 本季度的第一天,
+       TRUNC(sysdate, 'month') 本月的第一天,
+       TRUNC(sysdate, 'w'),
+       TRUNC(sysdate, 'ww') 离当前时间最近的周日,
+       to_char(sysdate, 'w') 本年第几周0,
+       to_char(sysdate, 'd') 本周第几天0,
+       TRUNC(sysdate, 'iw') 本周一,
+       TRUNC(sysdate, 'day') 上周日,
+       TRUNC(sysdate, 'month') 本月第一天,
+       TRUNC(last_day(sysdate)) 本月最后一天,
+       TRUNC(add_months(sysdate, -1), 'month') 上月第一天,
+       TRUNC(last_day(add_months(sysdate, -1))) 上月最后一天,
+       TRUNC(add_months(sysdate, -12), 'month') 去年本月第一天,
+       TRUNC(last_day(add_months(sysdate, -12))) 去年本月最后一天
+  FROM dual
+
+
+
+
+
+
+
+
+
 -- EXTRACT()
 -- EXTRACT(TIMESTAMP, STRING UNIT)
 YEAR
@@ -255,6 +291,10 @@ YEAR
          | TIMEZONE_MINUTE
          | TIMEZONE_REGION
          | TIMEZONE_ABBR
+
+-- 替换
+REGEXP_REPLACE(SUBSTR(CAST(DATE_SUB(NOW(), 1) AS STRING), 1, 10), '-', '')
+
 
 
 -- 问题总结：

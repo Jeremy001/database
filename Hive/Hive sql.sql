@@ -1,3 +1,8 @@
+/*
+内容：hive sql
+作者：Neo王政鸣
+ */
+
 -- hive中把一行转成多行
 SELECT
     TRACKING_NO,
@@ -9,3 +14,8 @@ FROM
 FROM  WHO_WMS_PUR_DELIVER_RECEIPT
 WHERE TRACKING_NO = '510019436417') A
 LATERAL VIEW EXPLODE(SPLIT(PUR_ORDER_SN, '，')) MYTABLE AS PUR_ORDER_SN2;
+
+-- 根据当前日期选择一个时间段
+-- 昨天，从凌晨0:00:00 至 23:59:59
+WHERE time >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_TIMESTAMP(), 1), 'yyyy-MM-dd')   -- 昨天
+     AND time < UNIX_TIMESTAMP(DATE_SUB(CURRENT_TIMESTAMP(), 0), 'yyyy-MM-dd')    -- 今天
